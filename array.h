@@ -1,18 +1,15 @@
-/* public interface for the array class, by John C. Lusth
- *
- * see array.c for a description
- *
- */
+ #include <stdio.h>
 
-typedef struct array
-{
-    void **store;               // array where the data is kept
-    int size;                   // current count of items in the array
-    int capacity;               // how many items the array can hold
-    int (*cmp)(void *,void *);  // a comparator for sorting
-} array;
+#ifndef __DARRAY_INCLUDED__
+#define __DARRAY_INCLUDED__
 
-extern array *newArray(int (*)(void *,void *));
-extern void addArray(array *,void *);
-extern void sortArray(array *);
-extern void freeArray(array *);
+typedef struct DArray DArray; //forward declaration of the DArray struct
+
+extern DArray *newDArray(void (*display)(FILE *,void *));
+extern void insertDArray(DArray *a,void *v);
+extern void *removeDArray(DArray *a);
+extern void *getDArray(DArray *a,int index);
+extern void setDArray(DArray *a,int index,void *value);
+extern int sizeDArray(DArray *a);
+extern void displayDArray(FILE *,DArray *a);
+#endif
