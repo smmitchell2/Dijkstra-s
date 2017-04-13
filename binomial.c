@@ -7,23 +7,21 @@ static void consolidate(Binomial *, BinomialNode *);
 static void merge (Binomial *,DArray *);
 static BinomialNode *bubbleUp(Binomial *, BinomialNode *);
 static BinomialNode *combine(Binomial *, BinomialNode *, BinomialNode *);
-static BinomialNode *getSubHeap(DArray *, int);//int is an index
+static BinomialNode *getSubHeap(DArray *, int);
 static void updateExtreme(Binomial *, BinomialNode *);
 static void findNewExtreme(Binomial *);
 static void levelOrderTraversal(FILE *, BinomialNode *);
 
 /*******************************BinomialNode*******************************/
 
-struct BinomialNode
-{
+struct BinomialNode{
 	void *value;
 	DArray *children;
 	struct BinomialNode *parent;
 	void (*display)(FILE *,void *);
 };
 
-BinomialNode *newBinomialNode(void (*display)(FILE *,void *),void *value)
-{
+BinomialNode *newBinomialNode(void (*display)(FILE *,void *),void *value){
 	BinomialNode *n = malloc(sizeof(BinomialNode));
 	n->value = value;
 	n->children = newDArray(display);
@@ -33,13 +31,11 @@ BinomialNode *newBinomialNode(void (*display)(FILE *,void *),void *value)
 	return n;
 }
 
-static int nodeDegree(BinomialNode *n)
-{
+static int nodeDegree(BinomialNode *n){
 	return sizeDArray(n->children);
 }
 
-void displayBinomialNode(FILE *fp,BinomialNode *n)
-{
+void displayBinomialNode(FILE *fp,BinomialNode *n){
 	n->display(fp, n->value);
 	fprintf(fp, "-%d", nodeDegree(n));
 	if(n != n->parent)
@@ -53,8 +49,7 @@ void displayBinomialNode(FILE *fp,BinomialNode *n)
 
 /*******************************Binomial***********************************/
 
-struct Binomial
-{
+struct Binomial{
 	DArray *rootlist;
 	int (*compare)(void *,void *);
 	void (*update)(void *,BinomialNode *);
@@ -63,12 +58,7 @@ struct Binomial
 	void (*display)(FILE *,void *);
 };
 
-Binomial *newBinomial(
-    void (*d)(FILE *,void *),        
-    int (*c)(void *,void *),         
-    void (*u)(void *,BinomialNode *)
-    )
-{
+Binomial *newBinomial(void (*d)(FILE *,void *),int (*c)(void *,void *),void (*u)(void *,BinomialNode *)){
 	Binomial *b = malloc(sizeof(Binomial));
 	b->display = d;
 	b->compare = c;
@@ -76,7 +66,6 @@ Binomial *newBinomial(
 	b->rootlist = newDArray(d);
 	b->extreme = NULL;
 	b->size = 0;
-
 	return b;
 }
 
@@ -105,12 +94,11 @@ void decreaseKeyBinomial(Binomial *b,BinomialNode *n,void *value){
 
 void *extractBinomial(Binomial *b){
 	BinomialNode *y = b->extreme;
-	int i = 0;
-	while(sizeDArray(b->rootlist) > i){
+	int i;
+	for(i = 0;sizeDArray(b->rootlist) > i;++i){
 		if(getDArray(b->rootlist, i)==y){
 			setDArray(b->rootlist, i, NULL);
 		}
-		++i;
 	}
 	merge(b, y->children);
 	b->size--;
@@ -125,13 +113,12 @@ void displayBinomial(FILE *fp,Binomial *b){
 		fprintf(fp, "0:\n");
         return;
 	}
-	int i = 0;
-	while(i < sizeDArray(b->rootlist)){
+	int i;
+	for(i = 0;i < sizeDArray(b->rootlist);++i){
 		if(getSubHeap(b->rootlist, i) != NULL){
 			levelOrderTraversal(fp, (BinomialNode *) getSubHeap(b->rootlist, i));
 			fprintf(fp, "----\n");
 		}
-		++i;
 	}
 }
 

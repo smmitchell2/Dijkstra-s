@@ -78,34 +78,27 @@ static void displayForest(FILE *fp, queue *branch){
 	Binomial *priority = newBinomial(displayVertex, compareVertex, updateVertex);
 	Vertex *v = NULL;
 
-	int i = 0, stepSize = 0, size = sizeQueue(branch);
+	int i, stepSize = 0, size = sizeQueue(branch);
 	
-	while(i < size){
+	for(i = 0;i < size;i++){
 		void *q = dequeue(branch);
 		v = q;
 		if(v->touched > stepSize){
 			stepSize = v->touched;
 		}
 		insertBinomial(priority, v);
-		i++;
 	}
 
 	queue *levelOrder[stepSize];
-	i = 0;
-	while(i <= stepSize){
+	for(i = 0;i <= stepSize;i++){
 		levelOrder[i] = newQueue(displayVertex);
-		i++;
 	}
-
-	i=0;
-	while(i < size){
+	for(i = 0;i < size;i++){
 		v = (Vertex *) extractBinomial(priority);
 		enqueue(levelOrder[v->touched], v);
-		i++;
 	}
 
-	i = 0;
-	while(i <= stepSize){
+	for(i = 0;i <= stepSize;i++){
 		fprintf(fp, "%d : ", i);
 		while(sizeQueue(levelOrder[i]) != 0){
 			v = (Vertex *) dequeue(levelOrder[i]);
@@ -115,7 +108,6 @@ static void displayForest(FILE *fp, queue *branch){
 			}
 		}
 		fprintf(fp, "\n");
-		i++;
 	}
 	fprintf(fp, "----\n");
 }
