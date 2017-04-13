@@ -11,7 +11,8 @@
 #define __VERTEX_INCLUDED__
 
 typedef struct Edge{
-	int from, to;
+	int from;
+	int to;
 	int weight;
 } Edge;
 

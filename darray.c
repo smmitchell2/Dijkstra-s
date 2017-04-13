@@ -11,13 +11,13 @@ struct DArray{
 };
 
 DArray *newDArray(void (*display)(FILE *,void *)){
-	DArray *new = malloc(sizeof(DArray)); 
-	new->array = malloc(sizeof(void *)*1);
-	new->capacity = 1;
-	new->size = 0;
-	new->display = display;
+	DArray *a = malloc(sizeof(DArray)); 
+	a->array = malloc(sizeof(void *)*1);
+	a->capacity = 1;
+	a->size = 0;
+	a->display = display;
 
-	return new;
+	return a;
 }
 
 void insertDArray(DArray *a,void *v){
