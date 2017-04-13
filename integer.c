@@ -3,24 +3,25 @@
 #include <limits.h>
 #include "integer.h"
 
-//extern void Fatal(char *,...);
-
 integer *
 newInteger(int x)
     {
     integer *p = malloc(sizeof(integer));
-    //if (p == 0) Fatal("out of memory\n");
+    if (p == 0){
+      fprintf(stderr,"out of memory\n");
+      exit(-1);
+    }
     p->value = x;
     return p;
     }
 
-int 
+int
 getInteger(integer *v)
     {
     return v->value;
     }
 
-int 
+int
 setInteger(integer *v,int x)
     {
     int old = v->value;
@@ -28,10 +29,10 @@ setInteger(integer *v,int x)
     return old;
     }
 
-void 
+void
 displayInteger(FILE *fp,void *v)
     {
-    fprintf(fp,"%d",getInteger((integer *) v));
+    fprintf(fp,"%d",getInteger(v));
     }
 
 int
@@ -44,4 +45,4 @@ void
 freeInteger(integer *v)
     {
     free(v);
-    }
+}

@@ -1,16 +1,11 @@
-/*head component to comparator.c*/
-#include <stdio.h>
-#include "integer.h"
-#include "real.h"
-#include "string.h"
-
 #ifndef __COMPARATOR_INCLUDED__
 #define __COMPARATOR_INCLUDED__
 
-typedef int (*Comparator)(void*, void*);
+typedef int (*Comparator)(void*,void*);
+typedef void (*Printer)(FILE*,void*);
 
-extern int intComparator(void *x, void *y);
-extern int realComparator(void *x, void *y);
-extern int stringComparator(void *x, void *y);
+extern int intComparator(void *a,void *b);
+extern int stringComparator(void *a, void *b);
+extern int realComparator(void *a, void *b);
 
 #endif

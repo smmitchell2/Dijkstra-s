@@ -1,42 +1,39 @@
-#include <stdio.h>
 #include <stdlib.h>
-#include "queue.h"
+#include <stdio.h>
 #include "sll.h"
+#include "queue.h"
 
-queue *newQueue(void (*d)(FILE *,void *))   //constructor
-{
-	queue *items = malloc(sizeof(queue));
-	if(items == 0)
-	{
-		fprintf(stderr, "out of memory.");
-		exit(-1);
-	}
-
-	items->list = newSLL(d);
-	return items;
+//fifo
+queue *newQueue(void (*d)(FILE *,void *)){
+  queue *q = malloc(sizeof(queue));
+  q->list = newSLL(d);
+  return q;
 }
 
-void enqueue(queue *items,void *value)      //stores a generic value
-{
-	insertSLL(items->list, sizeSLL(items->list), value);
+void enqueue(queue *items,void *value){
+  insertSLL(items->list,items->list->size ,value);
 }
 
-void *dequeue(queue *items)                 //returns a generic value
-{
-	return removeSLL(items->list, 0);
+void *dequeue(queue *items){
+  void *r = removeSLL(items->list,0);
+  return r;
 }
 
-void *peekQueue(queue *items)               //returns a generic value
-{
-	return getSLL(items->list, 0);
+void *peekQueue(queue *items){
+  return items->list->head->value;
 }
 
-int sizeQueue(queue *items)
-{
-	return sizeSLL(items->list);
+int sizeQueue(queue *items){
+  return items->list->size;
 }
 
-void displayQueue(FILE *fp,queue *items)
-{
-	displaySLL(fp, items->list);
+void displayQueue(FILE *fp,queue *items){
+  sllnode *temp = items->list->head;
+  fprintf(fp, "[" );
+  while(temp != NULL){
+    items->list->display(fp,temp->value);
+    if(temp->next != NULL){fprintf(fp,",");}
+    temp = temp->next;
+  }
+  fprintf(fp, "]");
 }

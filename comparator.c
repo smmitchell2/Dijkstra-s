@@ -1,48 +1,21 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "integer.h"
 #include "real.h"
-#include "string.h"
-#include <string.h>
 #include "comparator.h"
 
-int intComparator(void *x, void *y)
-{
-	int result = 0;
-
-	int a = *((int *)x);
-	int b = *((int *)y);
-
-	if(a > b)
-		result = 1;
-	else if (a == b)
-		result = 0;
-	else
-		result = -1;
-
-	return result;
+int intComparator(void *v,void *w){
+  return ((integer *) v)->value - ((integer *) w)->value;
 }
-int realComparator(void *x, void *y)
-{
-	int result = 0;
 
-	double a = *((double *)x);
-	double b = *((double *)y);
-
-	if(a > b)
-		result = 1;
-	else if (a == b)
-		result = 0;
-	else
-		result = -1;
-
-	return result;
+int stringComparator(void *a, void *b){
+  return strcmp((char*)a,(char*)b);
 }
-int stringComparator(void *x, void *y)
-{
-	char *a = ((string *)x)->value;
-	char *b = ((string *)y)->value;
 
-	int result = strcmp(a, b);
-	return result;
+int realComparator(void *v, void *w){
+  double a = *(double*)v;
+	double b = *(double*)w;
+	if(a < b){return -1;}
+	else if(a > b){return 1;}
+	else{return 0;}
 }

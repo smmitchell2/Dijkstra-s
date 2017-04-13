@@ -1,21 +1,16 @@
 #include "sll.h"
-#include <stdlib.h>
-#include <stdio.h>
+#ifndef __Queue_INCLUDED__
+#define __Queue_INCLUDED__
 
-#ifndef __QUEUE_INCLUDED__
-#define __QUEUE_INCLUDED__
+typedef struct Queue{
+  sll *list;
+}queue;
 
-typedef struct queue
-{
-	sll *list;
-}queue; 
-
-
-extern queue *newQueue(void (*d)(FILE *,void *));   //constructor
-extern void enqueue(queue *items,void *value);      //stores a generic value
-extern void *dequeue(queue *items);                 //returns a generic value
-extern void *peekQueue(queue *items);               //returns a generic value
-extern int sizeQueue(queue *items);
-extern void displayQueue(FILE *fp,queue *items);
+queue *newQueue(void (*d)(FILE *,void *));   //constructor
+void enqueue(queue *items,void *value);      //stores a generic value
+void *dequeue(queue *items);                 //returns a generic value
+void *peekQueue(queue *items);               //returns a generic value
+int sizeQueue(queue *items);
+void displayQueue(FILE *fp,queue *items);
 
 #endif

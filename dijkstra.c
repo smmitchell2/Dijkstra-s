@@ -20,6 +20,7 @@ int main(int argc, char **argv)
 	//use the following to fill the adjacency list
 	FILE *fp = fopen(argv[1], "r");
 
+
 	DArray *list = newDArray(displayVertex);
 
 	//fill an adjacency list 

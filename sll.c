@@ -1,168 +1,143 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "sll.h"
-//#include "integer.h"
 
-sll *newSLL(void (*d)(FILE *, void *)) //d is the display function
-{
-	sll *items = malloc(sizeof(sll));
-    if (items == 0)
-    	{
-    		fprintf(stderr,"out of memory");
-        	exit(-1);
-        }
-    items->head = 0;
-    items->tail = 0;
-    items->size = 0;
-    items->display = d;
-    return items;
+sllnode *newSLLNode(void *v){
+  sllnode *n = malloc(sizeof(sllnode));
+  n->value = v;
+  n->next = NULL;
+  return n;
 }
 
-void insertSLL(sll *items, int index, void *value) //inserts a new node into the linked list
-{
-	sllnode *new_node = malloc(sizeof(sllnode));
-	new_node -> value = value;
-	new_node->next = NULL;
-	//new_node -> next= items->head;
-	//items->head=new_node;
-
-	if (items->head == NULL || items->tail == NULL) //only inserting at the head
-	{
-		items->head = new_node;
-		items->tail = new_node;
-
-	}
-	else if (items->head != NULL && index == 0)
-	{
-		new_node->next = items->head;
-		items->head = new_node;
-	}
-	else if(items->size == index)
-	{
-		new_node->next = NULL;
-		items->tail->next = new_node;
-		items->tail = new_node;	
-	}
-	else
-	{
-		int currpos = 0;
-		sllnode *curr_node = items->head;
-		for(; currpos<index-1 && items->head != NULL; ++currpos)
-		{
-			curr_node = curr_node->next;
-		}
-			if(curr_node->next != NULL)
-			{
-				new_node->next = curr_node->next;
-				curr_node->next = new_node;
-			}
-			else
-			{
-				curr_node->next = new_node;
-			}
-	}
-	items->size++;
+sll *newSLL(void (*d)(FILE *,void *)){
+  sll *list = malloc(sizeof(sll));
+  list->head = NULL;
+  list->tail = NULL;
+  list->size = 0;
+  list->display = d;
+  return list;
 }
 
-void *removeSLL(sll *items, int index)	//remove item at desired index
-{
-	sllnode *tmp = items->head;		//store head in a temp
-
-	if(items->head != NULL && index == 0)	//to remove head
-	{
-		items->head = items->head->next;
-		tmp->next = NULL;
-
-		items->size--;
-		return tmp->value;
-	}
-	else
-	{
-		sllnode *remove_node;
-		for(int currpos = 0; currpos < index-1; ++currpos)
-		{
-			tmp = tmp->next;
-		}
-		remove_node = tmp->next;
-		tmp->next = remove_node->next;
-		remove_node->next = NULL;
-
-		return remove_node->value;
-	}
-
-	items->size--;
+void insertSLL(sll *items,int index,void *value){
+  if(items->size == 0 || index < 0){
+    sllnode *h = newSLLNode(value);
+    items->head = h;
+    items->tail = h;
+    items->size = items->size + 1;
+  }
+  else if(index == 0 && items->tail != NULL){
+    sllnode *temp = items->head;
+    sllnode *h = newSLLNode(value);
+    h->next = temp;
+    items->head = h;
+    items->size = items->size + 1;
+  }
+  else if(index == items->size){
+    sllnode *h = newSLLNode(value);
+    sllnode *temp = items->tail;
+    temp->next = h;
+    items->tail = h;
+    items->size = items->size + 1;
+  }
+  else {
+    int i;
+    sllnode *temp = items->head;
+    for (i = 0; i <= index; i++) {
+      if(i == index - 1){
+        sllnode *h = newSLLNode(value);
+        sllnode *t = temp->next;
+        temp->next = h;
+        h->next = t;
+        items->size = items->size + 1;
+        break;
+      }
+      temp = temp->next;
+    }
+  }
 }
 
-void unionSLL(sll *recipient, sll *donor)
-{
-	if (donor->head == NULL && recipient->head == NULL)
-	{
-		return;
-	}
-	else if(donor->head == NULL)
-	{
-		return;
-	}
-	else if (recipient->head == NULL && donor->head != NULL)
-	{
-		recipient->head = donor->head;
-	}
-	else
-	{
-		recipient->tail->next = donor->head;
-	}
-									//sets tail pointer of recipient
-									//to head of donor
-	recipient->tail = donor->tail;	//this allows union in constatnt time
-	recipient->size += donor->size;
-	donor->head = donor->tail = 0;
-	donor->size = 0;
+void *removeSLL(sll *items,int index){
+  void *r = NULL;
+  if (index == 0) {
+    r = items->head->value;
+    items->head = items->head->next;
+    items->size = items->size - 1;
+    return r;
+  }
+  else if(index == items->size - 1){
+    int i;
+    sllnode *temp = items->head;
+    for(i = 0;i < items->size;++i){
+      if(i == index - 1){
+          r = temp->next->value;
+          items->tail = temp;
+          items->tail->next = NULL;
+          items->size = items->size - 1;
+          break;
+      }
+      temp = temp->next;
+    }
+  }
+  else{
+    int i;
+    sllnode *temp = items->head;
+    for(i = 0;i < items->size;++i){
+      if(i == index - 1){
+          r = temp->next->value;
+          temp->next = temp->next->next;
+          items->size = items->size - 1;
+          break;
+      }
+      temp = temp->next;
+    }
+  }
+  return r;
 }
 
-void *getSLL(sll *items, int index) //returns the value at an index
-{
-	sllnode *tmp = items->head;
-	int posi = 0;
-	if(index == 0)
-	{
-		return tmp->value;
-	}
-	else{
-		while(tmp != NULL && posi < index-1)
-		{
-			tmp = tmp->next;
-			posi++;
-		}
-		return tmp->next->value;//display value at tmp
-	}
+void unionSLL(sll *recipient,sll *donor){
+  if(donor->head == NULL && recipient->head != NULL){return;}
+  else if(recipient->head == NULL && donor->head != NULL){
+    recipient->head = donor->head;
+    recipient->tail = donor->tail;
+    donor->head = donor->tail = NULL;
+    recipient->size = donor->size;
+    donor->size = 0;
+    return;
+  }
+  else if(donor->head == NULL && recipient->head == NULL){return;}
+  else{
+    recipient->tail->next = donor->head;
+    recipient->tail = donor->tail;
+    recipient->size = recipient->size + donor->size;
+    donor->head = NULL;
+    donor->tail = NULL;
+    donor->size = 0;
+  }
 }
 
-int sizeSLL(sll *items)
-{
-	// sllnode *tmp = items->head;	//tmp node
-	// int count = 0;
-	// while (tmp != NULL)			//counts the #of items in list
-	// {
-	// 	++count;
-	// 	tmp=tmp->next;
-	// }
-	// return count;
-	return items->size;
+int sizeSLL(sll *items){
+  return items->size;
 }
 
-void displaySLL(FILE *fp, sll *items)
-{
-	fprintf(fp,"[");
-	sllnode *tmp = items->head;
-	while (tmp != NULL)					//while not at the end of list
-	{
-		items -> display(fp, tmp->value);//display value at tmp
-		if(tmp->next != NULL)			//as long as tmp's next pointer
-		{								//doesn't point to null
-			fprintf(fp,",");				
-		}
-		tmp = tmp->next;				//set tmp equal to tmp's next
-	}
-	fprintf(fp,"]");
+void displaySLL(FILE *fp,sll *items){
+  sllnode *temp = items->head;
+  fprintf(fp, "[" );
+  while(temp != NULL){
+    items->display(fp,temp->value);
+    if(temp->next != NULL){fprintf(fp,",");}
+    temp = temp->next;
+  }
+  fprintf(fp, "]");
 }
 
+void *getSLL(sll *items,int index){
+  int i;
+  sllnode *temp = items->head;
+  for(i = 0;i <= items->size; ++i){
+    if (i == index) {
+      break;
+    }
+    temp  = temp->next;
+  }
+  return temp->value;
+}
