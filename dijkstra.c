@@ -101,19 +101,6 @@ static void displayForest(FILE *fp, queue *branch)
 		return;
 	}
 
-	//displaying the subgraphs pseudocode taken from david Mccoy's post on the Basic Outline of Dijkstra
-	/*you can display a subgraph with the visited vertices queue 
-	by inserting everything in the queue into a heap and then 
-	pulling them out to sort them, and you should make an array 
-	of queues where each index of the array has a queue which 
-	holds vertices with that number of steps. so you extract 
-	verts out of your new heap and add them into the appropriate 
-	queue by the number of steps in the array, and then go through 
-	each queue in the queue array and dequeue and print whatcha gotta 
-	print. the number of steps represents the level each vertex is at 
-	in the graph, so for each queue you can print the line number, and 
-	then print the vertices in it!*/
-
 	Binomial *priority = newBinomial(displayVertex, compareVertex, updateVertex);
 	Vertex *v = NULL;//declare a vertex to be used in the heap
 
