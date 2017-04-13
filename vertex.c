@@ -57,59 +57,56 @@ Vertex *startVertex(DArray *d){
 
 	Vertex *minimum = (Vertex *) getDArray(d, 0);
 	int i = 1;
-	while(i < sizeDArray(d)){
+	for(i = 1;i < sizeDArray(d);++i){
 		Vertex *v = getDArray(d, i);
 		if(v->value < minimum->value){
 			minimum = v;
 		}
-		++i;
 	}
 	return minimum;
 }
 
-void insertVertex(DArray *d, int vert, int friend, int weight){
+void insertVertex(DArray *d, int vert, int connected, int weight){
 	Vertex *v = findVertex(d, vert);
 
 	if(v != NULL){
-		Adjacent *a = findAdjacency(v->adjacentV, friend);
+		Adjacent *a = findAdjacency(v->adjacentV, connected);
 		if(a != NULL){
 			if(a->weight > weight){
 				a->weight = weight;
 			}
 		}
 		else{
-			a = newAdjacency(friend, weight);
+			a = newAdjacency(connected, weight);
 			insertDArray(v->adjacentV, a);
 		}
 	}
 	else{
 		v = newVertex(vert);
-		Adjacent *adj = newAdjacency(friend, weight);
+		Adjacent *adj = newAdjacency(connected, weight);
 		insertDArray(v->adjacentV, adj);
 		insertDArray(d, v);
 	}	
 }
 
 Vertex *findVertex(DArray *d, int vertex){
-	int i=0;
-	while(i < sizeDArray(d)){
+	int i;
+	for(i = 0;i < sizeDArray(d);++i){
 		Vertex *v = getDArray(d, i);
 		if(v->value == vertex){
 			return v;
 		}
-		++i;
 	}
 	return NULL;
 }
 
 Adjacent *findAdjacency(DArray *d, int v){
-	int i=0;
-	while(i < sizeDArray(d)){
+	int i;
+	for(i = 0;i < sizeDArray(d);++i){
 		Adjacent *a = getDArray(d, i);
 		if(a->vertex->value == v){
 			return a;
 		}
-		++i;
 	}
 	return NULL;
 }
@@ -161,11 +158,10 @@ void updateVertex(void *value, BinomialNode *n){
 
 Binomial *fillHeap(DArray *list){
 	Binomial *b = newBinomial(displayVertex, compareVertex, updateVertex);
-	int i = 0;
-	while(i < sizeDArray(list)){
+	int i;
+	for(i = 0;i < sizeDArray(list);++i){
 		Vertex *v = getDArray(list, i);
 		v->node = insertBinomial(b, v);
-		++i;
 	}	
 	return b;
 }
